@@ -11,23 +11,27 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 dotenv.config();
+app.use(express.static("public"));
 const lastfmKey = process.env.LASTFM_API_KEY;
 
 
 app.use(bodyParser.urlencoded({extended: true}));
 
+
 app.listen(3000, function() {
     console.log("server is running on port 3000.")
 })
 
+let lastfmData;
 app.get("/", function(req, res){
-    res.sendFile(__dirname+"/index.html");
-})
+    //res.sendFile(__dirname+"/index.html");
+    res.render("index.ejs", { lastfm: lastfmData });
+});
 
-app.post("/", function(req,res){
+app.post("/card", (req,res) => {
     console.log("Post request received");
     const query = req.body.fmUsername;
-    const lastfmURL = "https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user="+query+"&api_key="+lastfmKey+"&format=json&limit=3";
+    const lastfmURL = "https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user="+query+"&api_key="+lastfmKey+"&format=json&limit=5";
     https.get(lastfmURL, "JSON", function(response){
         console.log(response.statusCode);
         var data;
@@ -40,11 +44,11 @@ app.post("/", function(req,res){
             }
         });
         response.on("end", function() {
-            const lastfmData = JSON.parse(data);
+            lastfmData = JSON.parse(data);
             console.log(lastfmData);
-            const track1 = lastfmData.toptracks.track[0].name;
-            res.write("<p> The number one track is "+track1+".</p>");
-            res.send(); 
+            //const track1 = lastfmData.toptracks.track[0].name;
+            //res.write("<p> The number one track is "+track1+".</p>");
+            res.redirect("/"); 
         });
     })
 })

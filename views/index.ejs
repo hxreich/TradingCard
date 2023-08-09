@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Card</title>
+</head>
+<body>
+    <form action="/card" method="post">
+        <label for="lastfmUsername">lastFm Username</label>
+        <input id="lastfmUser" type="text" name="fmUsername">
+        <button type="submit">Go</button>
+    </form>
+    <div id="cardContainer" class="hidden">
+        <%if (locals.lastfm) {%>
+        <ol id="card list">
+            <% lastfm.toptracks.track.forEach(tracks=> {%>
+            <li><%= tracks.name %></li>    
+            <ul>
+                <li>Artist: <%= tracks.artist.name %></li>
+                <li>Duration: <%= tracks.duration %></li>
+                <li>Playcount: <%= tracks.playcount %></li>
+            </ul>
+            <% }) %>
+        </ol>
+        <%} else {%>
+            <h2>Enter last.fm username!</h2>
+            <% } %>
+    </div>
+</body>
+</html>
