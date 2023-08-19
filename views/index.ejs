@@ -9,6 +9,14 @@
     <form action="/card" method="post">
         <label for="lastfmUsername">lastFm Username</label>
         <input id="lastfmUser" type="text" name="fmUsername">
+        <label for="dropdown">Select an option:</label>
+        <select name="dropdown" id="dropdown">
+            <option value ="7day">7 days</option> 
+            <option value ="1month">1 month</option>
+            <option value ="3month">3 months</option>
+            <option value ="6month">6 months</option>
+            <option value ="12month">12 months</option>
+        </select>
         <button type="submit">Go</button>
     </form>
     <div id="cardContainer" class="hidden">
@@ -24,7 +32,7 @@
             <% }) %>
         </ol>
         <%} else {%>
-            <h2>Enter last.fm username!</h2>
+            <h2>Enter last.fm username and Select a TimeFrame!</h2>
             <% } %>
     </div>
 </body>

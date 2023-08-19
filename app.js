@@ -36,7 +36,8 @@ app.get("/", function(req, res){
 app.post("/card", (req,res) => {
     console.log("Post request received");
     const query = req.body.fmUsername;
-    const lastfmURLGetTopTracks = "https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user="+query+"&api_key="+lastfmKey+"&format=json&limit=5";
+    const period = req.body.dropdown;
+    const lastfmURLGetTopTracks = "https://ws.audioscrobbler.com/2.0/?method=user.getTopTracks&user="+query+"&api_key="+lastfmKey+"&period="+period+"&format=json&limit=5";
 
     https.get(lastfmURLGetTopTracks, "JSON", function(response){
         console.log(response.statusCode);
