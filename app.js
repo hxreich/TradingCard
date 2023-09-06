@@ -1,3 +1,50 @@
+import express from "express";
+import bodyParser from "body-parser";
+import apiFunctions from "./modules/api.js";
+import dataProcessorFunctions from "./modules/dataProcessor.js";
+
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+//const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
+
+app.get('/', (req, res) => {
+    res.render("index.ejs");
+});
+
+app.post('/card', async (req, res) => {
+    try {
+        console.log("in POST");
+        // Extract form data 
+        const userName = req.body.fmUsername;
+        const period = req.body.dropdown;
+        
+
+        // Fetch top tracks data from the Last.fm API
+        const topTracksData = await apiFunctions.fetchLastfmTopTracks(userName, period);
+
+        // Process the top tracks data
+        const processedTracks = dataProcessorFunctions.processTopTracks(topTracksData);
+
+        // Implement logic to render a view with processed data
+        res.render('result.ejs', { processedTracks });
+
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+/*
 import bodyParser from "body-parser";
 import express from "express";
 import https from "https";
@@ -11,9 +58,9 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
-dotenv.config();
+//dotenv.config();
 app.use(express.static("public"));
-const lastfmKey = process.env.LASTFM_API_KEY;
+//const lastfmKey = process.env.LASTFM_API_KEY;
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -143,7 +190,7 @@ async function fetchTracks() {
             const trackArtist = trackData.track.artist.name;
             console.log("Artist: "+trackArtist+"\n");   
             }  
-        } */
+        } 
         const trackObjects = trackDataArrays.map(trackData => Track.createFromData(trackData))
 
         if(trackObjects.length == 0) {
@@ -194,3 +241,4 @@ class Track {
         console.log("\n");
     }
 }
+*/
